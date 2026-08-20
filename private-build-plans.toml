@@ -1,0 +1,238 @@
+[buildPlans.ZiraMono]
+family = "Zira Mono"
+spacing = "normal"
+serifs = "sans"
+noCvSs = true
+exportGlyphNames = false
+
+[buildPlans.ZiraMono.variants]
+inherits = "ss05"
+
+[buildPlans.ZiraMono.variants.design]
+four = "semi-open-serifless"
+five = "upright-arched-serifless"
+seven = "straight-serifed"
+eight = "two-circles"
+nine = "straight-bar"
+zero = "slashed"
+capital-d = "standard-serifless"
+capital-g = "toothless-corner-serifless-hooked"
+capital-k = "symmetric-touching-serifless"
+capital-l = "serifless"
+capital-m = "hanging-serifless"
+capital-n = "standard-serifless"
+capital-q = "curly-tailed"
+capital-w = "straight-serifless"
+capital-x = "straight-serifless"
+a = "double-storey-flat-bottom-serifless"
+f = "serifless"
+g = "single-storey-serifless"
+h = "straight-serifless"
+j = "flat-hook-serifless"
+l = "flat-tailed"
+r = "serifless"
+t = "bent-hook-short-neck"
+x = "straight-serifless"
+y = "straight-turn-serifless"
+z = "straight-serifless-with-horizontal-crossbar"
+eszet = "sulzbacher-descending-serifless"
+asterisk = "penta-high"
+underscore = "above-baseline"
+caret = "medium"
+paren = "normal"
+brace = "curly"
+number-sign = "slanted"
+ampersand = "et-flat-bottom"
+dollar = "open"
+percent = "rings-continuous-slash"
+bar = "force-upright"
+question = "corner-flat-hooked"
+
+[buildPlans.ZiraMono.weights.Regular]
+shape = 400
+menu = 400
+css = 400
+
+[buildPlans.ZiraMono.weights.Bold]
+shape = 700
+menu = 700
+css = 700
+
+[buildPlans.ZiraMono.slopes.Upright]
+angle = 0
+shape = "upright"
+menu = "upright"
+css = "normal"
+
+[buildPlans.ZiraMono.slopes.Italic]
+angle = 9.4
+shape = "italic"
+menu = "italic"
+css = "italic"
+
+# Zira Sans
+[buildPlans.ZiraSans]
+family = "Zira Sans"
+spacing = "quasi-proportional"
+serifs = "sans"
+noCvSs = true
+exportGlyphNames = false
+
+[buildPlans.ZiraSans.variants]
+inherits = "ss05"
+
+[buildPlans.ZiraSans.variants.design]
+four = "semi-open-serifless"
+five = "upright-arched-serifless"
+six = "closed-contour"
+seven = "straight-serifless"
+eight = "two-circles"
+nine = "straight-bar"
+zero = "slashed"
+capital-j = "serifed"
+capital-l = "serifless"
+capital-m = "hanging-serifless"
+capital-n = "standard-serifless"
+capital-q = "crossing-curly-tailed"
+capital-w = "straight-serifless"
+capital-x = "straight-serifless"
+a = "double-storey-serifless"
+b = "toothed-serifless"
+e = "rounded"
+f = "serifless"
+g = "double-storey-open"
+j = "serifed"
+l = "serifed-flat-tailed"
+r = "serifless"
+x = "straight-serifless"
+y = "cursive-flat-hook-serifless"
+z = "straight-serifless-with-crossbar"
+eszet = "sulzbacher-descending-serifless"
+asterisk = "penta-high"
+underscore = "high"
+caret = "high"
+paren = "normal"
+brace = "curly"
+number-sign = "slanted"
+ampersand = "upper-open"
+dollar = "open"
+percent = "rings-continuous-slash"
+bar = "natural-slope"
+question = "smooth"
+
+[buildPlans.ZiraSans.weights.Regular]
+shape = 400
+menu = 400
+css = 400
+
+[buildPlans.ZiraSans.weights.Bold]
+shape = 700
+menu = 700
+css = 700
+
+[buildPlans.ZiraSans.slopes.Upright]
+angle = 0
+shape = "upright"
+menu = "upright"
+css = "normal"
+
+[buildPlans.ZiraSans.slopes.Italic]
+angle = 9.4
+shape = "italic"
+menu = "italic"
+css = "italic"
+
+# Zira Serif
+[buildPlans.ZiraSerif]
+family = "Zira Serif"
+spacing = "quasi-proportional"
+serifs = "slab"
+noCvSs = true
+exportGlyphNames = false
+
+[buildPlans.ZiraSerif.variants]
+inherits = "ss05"
+
+[buildPlans.ZiraSerif.variants.design]
+one = "base"
+three = "flat-top-serifed"
+four = "semi-open-serifed"
+five = "upright-arched-serifed"
+six = "closed-contour"
+seven = "straight-serifed"
+eight = "two-circles"
+nine = "closed-contour"
+zero = "reverse-slashed"
+capital-a = "straight-top-serifed"
+capital-b = "standard-unilateral-serifed"
+capital-c = "unilateral-serifed"
+capital-d = "standard-unilateral-serifed"
+capital-e = "top-left-serifed"
+capital-f = "serifed"
+capital-g = "toothless-rounded-serifed-capped"
+capital-h = "top-left-bottom-right-serifed"
+capital-i = "serifed"
+capital-j = "serifed"
+capital-k = "straight-top-left-and-bottom-right-serifed"
+capital-l = "motion-serifed"
+capital-m = "hanging-serifed"
+capital-n = "standard-serifed"
+capital-p = "closed-serifed"
+capital-q = "closed-swash"
+capital-r = "straight-serifed"
+capital-s = "unilateral-serifed"
+capital-t = "serifed"
+capital-u = "toothed-motion-serifed"
+capital-v = "straight-motion-serifed"
+capital-w = "straight-motion-serifed"
+capital-x = "straight-bilateral-motion-serifed"
+capital-y = "straight-serifed"
+capital-z = "straight-serifed-with-crossbar"
+a = "double-storey-serifed"
+b = "toothed-serifed"
+c = "bilateral-serifed"
+e = "flat-crossbar"
+f = "serifed"
+g = "double-storey-open"
+i = "serifed"
+j = "narrow-serifed"
+k = "symmetric-touching-top-left-and-bottom-right-serifed"
+l = "serifed-semi-tailed"
+r = "serifed"
+x = "straight-bilateral-motion-serifed"
+y = "straight-turn-serifed"
+z = "straight-serifed-with-crossbar"
+eszet = "sulzbacher-descending-middle-serifed"
+asterisk = "penta-high"
+underscore = "above-baseline"
+caret = "medium"
+paren = "flat-arc"
+brace = "curly-flat-boundary"
+number-sign = "slanted"
+ampersand = "upper-open"
+dollar = "open"
+percent = "rings-continuous-slash-also-connected"
+bar = "force-upright"
+question = "corner"
+
+[buildPlans.ZiraSerif.weights.Regular]
+shape = 400
+menu = 400
+css = 400
+
+[buildPlans.ZiraSerif.weights.Bold]
+shape = 700
+menu = 700
+css = 700
+
+[buildPlans.ZiraSerif.slopes.Upright]
+angle = 0
+shape = "upright"
+menu = "upright"
+css = "normal"
+
+[buildPlans.ZiraSerif.slopes.Italic]
+angle = 9.4
+shape = "italic"
+menu = "italic"
+css = "italic"

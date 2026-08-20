@@ -1,0 +1,95 @@
+name: Build Zira Fonts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "private-build-plans.toml"
+      - ".github/workflows/**"
+  workflow_dispatch:
+    inputs:
+      iosevka_ref:
+        description: "Iosevka source ref (tag/branch/commit) to build against"
+        required: false
+        default: "v34.8.0"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-zira-fonts
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build fonts from private-build-plans.toml
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Clone Iosevka source
+        run: |
+          git clone --depth 1 --branch "${{ inputs.iosevka_ref || 'v34.8.0' }}" \
+            https://github.com/be5invis/Iosevka.git iosevka
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: iosevka/package-lock.json
+
+      - name: Install ttfautohint
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ttfautohint
+
+      - name: Install npm dependencies
+        working-directory: iosevka
+        run: npm install
+
+      - name: Build fonts
+        working-directory: iosevka
+        run: |
+          plans=$(python3 - <<'PY'
+          import re
+          plans = []
+          with open("../private-build-plans.toml", encoding="utf-8") as f:
+              for line in f:
+                  m = re.match(r"\s*\[buildPlans\.([^.\]]+)\]", line)
+                  if m:
+                      plans.append(m.group(1))
+          print(" ".join(plans))
+          PY
+          )
+          if [ -z "$plans" ]; then
+            echo "::error::No [buildPlans.*] sections found in private-build-plans.toml"
+            exit 1
+          fi
+          echo "Build plans: $plans"
+          for plan in $plans; do
+            npm run build -- "contents::$plan" --jCmd=2
+          done
+
+      - name: Copy built fonts into zira/
+        run: |
+          rm -rf zira/ttf zira/woff2
+          mkdir -p zira/ttf zira/woff2
+          cp iosevka/dist/*/TTF/*.ttf zira/ttf/
+          cp iosevka/dist/*/WOFF2/*.woff2 zira/woff2/
+
+      - name: List built fonts
+        run: find zira -type f | sort
+
+      - name: Commit and push built fonts
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add zira
+          if git diff --cached --quiet; then
+            echo "No font changes to commit."
+          else
+            git commit -m "chore: rebuild Zira fonts from private-build-plans.toml"
+            git push
+          fi
