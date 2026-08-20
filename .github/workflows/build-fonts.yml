@@ -12,6 +12,10 @@ on:
         description: "Iosevka source ref (tag/branch/commit) to build against"
         required: false
         default: "v34.8.0"
+      tag:
+        description: "Optional git tag to create for this build (e.g. v1.0.0); reference it in jsDelivr URLs as @<tag> for permanent caching"
+        required: false
+        default: ""
 
 permissions:
   contents: write
@@ -81,6 +85,9 @@ jobs:
           # Ship the SIL OFL 1.1 license alongside the built fonts (OFL condition 2)
           cp LICENSE.md zira/LICENSE.md
 
+      - name: Generate webfont CSS
+        run: python3 tools/make-webfont-css.py
+
       - name: List built fonts
         run: find zira -type f | sort
 
@@ -94,4 +101,10 @@ jobs:
           else
             git commit -m "chore: rebuild Zira fonts from private-build-plans.toml"
             git push
+          fi
+          tag="${{ inputs.tag }}"
+          if [ -n "$tag" ]; then
+            git tag -f "$tag"
+            git push -f origin "$tag"
+            echo "Created/updated tag $tag"
           fi
