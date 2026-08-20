@@ -1,2 +1,6 @@
-# Iosevka source tree cloned by .github/workflows/build-fonts.yml
+# Iosevka source tree cloned by the release workflow
 /iosevka/
+
+# Build artifacts staged by the release workflow (not committed)
+/zira/
+/npm-package/

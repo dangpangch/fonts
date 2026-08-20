@@ -1,36 +1,52 @@
-name: Build Zira Fonts
+name: Release Zira Fonts
 
 on:
   push:
-    branches: [main]
-    paths:
-      - "private-build-plans.toml"
-      - ".github/workflows/**"
+    tags:
+      - "v*"
   workflow_dispatch:
     inputs:
+      version:
+        description: "Version to release (e.g. 0.1.0 or v0.1.0)"
+        required: true
       iosevka_ref:
         description: "Iosevka source ref (tag/branch/commit) to build against"
         required: false
         default: "v34.8.0"
-      tag:
-        description: "Optional git tag to create for this build (e.g. v1.0.0); reference it in jsDelivr URLs as @<tag> for permanent caching"
-        required: false
-        default: ""
 
 permissions:
   contents: write
 
 concurrency:
-  group: build-zira-fonts
+  group: release-zira-fonts
   cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build fonts from private-build-plans.toml
+  release:
+    name: Build, release and publish
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${GITHUB_REF#refs/tags/}"
+          fi
+          case "$VERSION" in
+            v*) TAG="$VERSION"; NPM="${VERSION#v}" ;;
+            *) TAG="v$VERSION"; NPM="$VERSION" ;;
+          esac
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Invalid version '$VERSION' (expected semver, e.g. 0.1.0)"
+            exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "npm=$NPM" >> "$GITHUB_OUTPUT"
 
       - name: Clone Iosevka source
         run: |
@@ -47,10 +63,10 @@ jobs:
           cache: npm
           cache-dependency-path: iosevka/package-lock.json
 
-      - name: Install ttfautohint
+      - name: Install ttfautohint and zip
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends ttfautohint
+          sudo apt-get install -y --no-install-recommends ttfautohint zip
 
       - name: Install npm dependencies
         working-directory: iosevka
@@ -79,10 +95,9 @@ jobs:
             npm run build -- "contents::$plan" --jCmd=2
           done
 
-      - name: Copy built fonts into zira/
+      - name: Stage fonts into zira/ (not committed)
         run: |
-          # Remove previous outputs (flat layout from older builds, plus per-family dirs)
-          rm -rf zira/ttf zira/woff2 zira/mono zira/sans zira/serif
+          rm -rf zira
           for grp in iosevka/dist/*; do
             name=$(basename "$grp")
             sub=$(printf '%s' "$name" | sed -E 's/^Zira//; s/.*/\L&/')
@@ -103,20 +118,46 @@ jobs:
       - name: List built fonts
         run: find zira -type f | sort
 
-      - name: Commit and push built fonts
+      - name: Package release zips
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add zira
-          if git diff --cached --quiet; then
-            echo "No font changes to commit."
-          else
-            git commit -m "chore: rebuild Zira fonts from private-build-plans.toml"
-            git push
-          fi
-          tag="${{ inputs.tag }}"
-          if [ -n "$tag" ]; then
-            git tag -f "$tag"
-            git push -f origin "$tag"
-            echo "Created/updated tag $tag"
-          fi
+          cd zira
+          zip -r /tmp/zira-ttf.zip */TTF LICENSE.md
+          zip -r /tmp/zira-woff2.zip */WOFF2 *.css LICENSE.md
+          cd ..
+          ls -lh /tmp/zira-*.zip
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          name: ${{ steps.version.outputs.tag }}
+          files: |
+            /tmp/zira-ttf.zip
+            /tmp/zira-woff2.zip
+          generate_release_notes: true
+
+      - name: Prepare npm package (WOFF2 + CSS only)
+        run: |
+          rm -rf npm-package
+          mkdir -p npm-package/zira
+          for subdir in zira/*/; do
+            sub=$(basename "$subdir")
+            mkdir -p "npm-package/zira/$sub"
+            cp -r "$subdir/WOFF2" "npm-package/zira/$sub/WOFF2"
+            cp "$subdir"/*.css "npm-package/zira/$sub/"
+          done
+          cp zira/fonts.css zira/LICENSE.md npm-package/zira/
+          cp README.md npm-package/README.md
+          python3 tools/make-package-json.py "${{ steps.version.outputs.npm }}" npm-package
+
+      - name: Set up Node.js for npm publish
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Publish to npm
+        working-directory: npm-package
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public
