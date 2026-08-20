@@ -18,7 +18,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: release-zira-fonts
+  group: release-zira-font
   cancel-in-progress: true
 
 jobs:

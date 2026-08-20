@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate package.json for the @dangpang/zira-fonts npm package.
+"""Generate package.json for the zira-font npm package.
 
 Usage:
     python3 tools/make-package-json.py <version> <output_dir>
@@ -7,7 +7,7 @@ Usage:
 The package ships the web build (WOFF2 + CSS, under `zira/`) so it can be
 served by the jsDelivr npm CDN:
 
-    https://cdn.jsdelivr.net/npm/@dangpang/zira-fonts@latest/zira/fonts.css
+    https://cdn.jsdelivr.net/npm/zira-font@latest/zira/fonts.css
 """
 
 import json
@@ -27,7 +27,7 @@ def main():
         return 1
     out_dir = Path(sys.argv[2])
     pkg = {
-        "name": "@dangpang/zira-fonts",
+        "name": "zira-font",
         "version": version,
         "description": (
             "Zira Mono, Zira Sans and Zira Serif - custom fonts built from Iosevka "
@@ -36,8 +36,8 @@ def main():
         "license": "OFL-1.1",
         "files": ["zira"],
         "keywords": ["font", "fonts", "woff2", "iosevka", "zira"],
-        "repository": {"type": "git", "url": "https://github.com/dangpangch/fonts.git"},
-        "homepage": "https://github.com/dangpangch/fonts",
+        "repository": {"type": "git", "url": "https://github.com/dangpang/zira-font.git"},
+        "homepage": "https://github.com/dangpang/zira-font",
     }
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "package.json").write_text(json.dumps(pkg, indent=2) + "\n", encoding="utf-8")

@@ -15,7 +15,7 @@ permissions:
   id-token: write  # required for npm trusted publishing (OIDC)
 
 concurrency:
-  group: publish-zira-fonts-npm
+  group: publish-zira-font-npm
   cancel-in-progress: true
 
 jobs:
@@ -74,7 +74,7 @@ jobs:
           fi
 
   publish:
-    name: Publish @dangpang/zira-fonts
+    name: Publish zira-font
     needs: check
     if: needs.check.outputs.exists == 'true'
     runs-on: ubuntu-latest
