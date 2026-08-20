@@ -16,7 +16,6 @@ on:
 
 permissions:
   contents: write
-  id-token: write  # required for npm trusted publishing (OIDC)
 
 concurrency:
   group: release-zira-fonts
@@ -24,7 +23,7 @@ concurrency:
 
 jobs:
   release:
-    name: Build, release and publish
+    name: Build and release
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -137,32 +136,3 @@ jobs:
             /tmp/zira-woff2.zip
           generate_release_notes: true
 
-      - name: Prepare npm package (WOFF2 + CSS only)
-        run: |
-          rm -rf npm-package
-          mkdir -p npm-package/zira
-          for subdir in zira/*/; do
-            sub=$(basename "$subdir")
-            mkdir -p "npm-package/zira/$sub"
-            cp -r "$subdir/WOFF2" "npm-package/zira/$sub/WOFF2"
-            cp "$subdir"/*.css "npm-package/zira/$sub/"
-          done
-          cp zira/fonts.css zira/LICENSE.md npm-package/zira/
-          cp README.md npm-package/README.md
-          python3 tools/make-package-json.py "${{ steps.version.outputs.npm }}" npm-package
-
-      - name: Set up Node.js for npm publish
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-          registry-url: https://registry.npmjs.org
-
-      - name: Publish to npm
-        working-directory: npm-package
-        # npm trusted publishing (OIDC) is preferred and authenticates via
-        # id-token: write. NODE_AUTH_TOKEN is only a bootstrap fallback for the
-        # very first publish (before a Trusted Publisher can be configured);
-        # remove it once trusted publishing is active.
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public

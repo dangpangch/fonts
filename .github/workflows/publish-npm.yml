@@ -1,0 +1,90 @@
+name: Publish to npm
+
+on:
+  workflow_run:
+    workflows: ["Release Zira Fonts"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to publish to npm (e.g. 0.1.0 or v0.1.0)"
+        required: true
+
+permissions:
+  contents: read
+  id-token: write  # required for npm trusted publishing (OIDC)
+
+concurrency:
+  group: publish-zira-fonts-npm
+  cancel-in-progress: true
+
+jobs:
+  publish:
+    name: Publish @dangpang/zira-fonts
+    runs-on: ubuntu-latest
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      github.event.workflow_run.conclusion == 'success'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Resolve version
+        id: version
+        run: |
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            VERSION="${{ inputs.version }}"
+          else
+            VERSION="${{ github.event.workflow_run.head_branch }}"
+          fi
+          case "$VERSION" in
+            v*) TAG="$VERSION"; NPM="${VERSION#v}" ;;
+            *) TAG="v$VERSION"; NPM="$VERSION" ;;
+          esac
+          if [[ ! "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "::error::Invalid version '$VERSION' (expected semver, e.g. 0.1.0)"
+            exit 1
+          fi
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+          echo "npm=$NPM" >> "$GITHUB_OUTPUT"
+
+      - name: Download webfont zip from Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          rm -rf /tmp/release-assets
+          gh release download "${{ steps.version.outputs.tag }}" \
+            --repo "${{ github.repository }}" \
+            --pattern "zira-woff2.zip" \
+            --dir /tmp/release-assets
+          ls -lh /tmp/release-assets
+
+      - name: Prepare npm package (WOFF2 + CSS only)
+        run: |
+          rm -rf npm-package
+          mkdir -p npm-package/zira
+          unzip -q /tmp/release-assets/zira-woff2.zip -d /tmp/release-assets/extracted
+          for dir in /tmp/release-assets/extracted/*/; do
+            cp -r "$dir" npm-package/zira/
+          done
+          cp /tmp/release-assets/extracted/fonts.css npm-package/zira/
+          cp /tmp/release-assets/extracted/LICENSE.md npm-package/zira/
+          cp README.md npm-package/README.md
+          python3 tools/make-package-json.py "${{ steps.version.outputs.npm }}" npm-package
+          find npm-package -type f | sort
+
+      - name: Set up Node.js for npm publish
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://registry.npmjs.org
+
+      - name: Publish to npm
+        working-directory: npm-package
+        # npm trusted publishing (OIDC) is preferred and authenticates via
+        # id-token: write. NODE_AUTH_TOKEN is only a bootstrap fallback for the
+        # very first publish (before a Trusted Publisher can be configured);
+        # remove it once trusted publishing is active.
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npm publish --access public

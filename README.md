@@ -4,12 +4,10 @@
 
 ## 发布
 
-推送到 `v*` tag（如 `./release.sh 0.1.0`）或手动触发 **Release Zira Fonts** workflow（填 `version`）后自动：
+推送到 `v*` tag（如 `./release.sh 0.1.0`）或手动触发后，两个 workflow 依次自动执行：
 
-1. 克隆 Iosevka 源码（默认 `v34.8.0`，可指定 `iosevka_ref`）；
-2. 按 `private-build-plans.toml` 中所有 `[buildPlans.*]` 构建（TTF + WOFF2）；
-3. 上传 GitHub Release 资产（`zira-ttf.zip`、`zira-woff2.zip`，桌面下载用）；
-4. 发布 npm 包 `@dangpang/zira-fonts`（Web 用，含 WOFF2 + CSS）。
+1. **Release Zira Fonts**（`build-fonts.yml`）：克隆 Iosevka 源码（默认 `v34.8.0`，可指定 `iosevka_ref`）→ 按 `private-build-plans.toml` 中所有 `[buildPlans.*]` 构建（TTF + WOFF2）→ 上传 GitHub Release 资产（`zira-ttf.zip`、`zira-woff2.zip`，桌面下载用）；
+2. **Publish to npm**（`publish-npm.yml`）：Release 成功后自动触发 → 下载 `zira-woff2.zip` → 发布 npm 包 `@dangpang/zira-fonts`（Web 用，含 WOFF2 + CSS）。
 
 构建产物不提交进仓库。
 
