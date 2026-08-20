@@ -10,11 +10,12 @@
 2. 按 `private-build-plans.toml` 中所有 `[buildPlans.*]` 构建（TTF + WOFF2）；
 3. 提交产物到 `zira/`：
 
-| 目录             | 内容                     |
-| ---------------- | ------------------------ |
-| `zira/ttf`       | TTF 字体                 |
-| `zira/woff2`     | WOFF2 网页字体           |
-| `zira/fonts.css` | 生成的 @font-face 样式表 |
+| 目录             | 内容                                           |
+| ---------------- | ---------------------------------------------- |
+| `zira/mono/`     | Zira Mono：`TTF/`、`WOFF2/`、`ZiraMono.css`    |
+| `zira/sans/`     | Zira Sans：`TTF/`、`WOFF2/`、`ZiraSans.css`    |
+| `zira/serif/`    | Zira Serif：`TTF/`、`WOFF2/`、`ZiraSerif.css`  |
+| `zira/fonts.css` | 全部字体族的 @font-face 规则                   |
 
 ## 网页引用（jsDelivr，仓库需 public）
 
@@ -25,8 +26,17 @@
 />
 ```
 
+单族（如仅需 Zira Mono）：
+
+```html
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/gh/dangpangch/fonts@main/zira/mono/ZiraMono.css"
+/>
+```
+
 ```css
-font-family: "Zira Sans"; /* 或 Zira Mono / Zira Serif */
+font-family: "Zira Mono"; /* 或 Zira Sans / Zira Serif */
 ```
 
 或直接引用单个 WOFF2：
@@ -34,7 +44,7 @@ font-family: "Zira Sans"; /* 或 Zira Mono / Zira Serif */
 ```css
 @font-face {
   font-family: "Zira Sans";
-  src: url("https://cdn.jsdelivr.net/gh/dangpangch/fonts@main/zira/woff2/ZiraSans-Regular.woff2")
+  src: url("https://cdn.jsdelivr.net/gh/dangpangch/fonts@main/zira/sans/WOFF2/ZiraSans-Regular.woff2")
     format("woff2");
   font-weight: 400;
   font-style: normal;
