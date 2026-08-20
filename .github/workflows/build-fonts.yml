@@ -37,6 +37,9 @@ jobs:
           git clone --depth 1 --branch "${{ inputs.iosevka_ref || 'v34.8.0' }}" \
             https://github.com/be5invis/Iosevka.git iosevka
 
+      - name: Copy build plans into Iosevka source
+        run: cp private-build-plans.toml iosevka/
+
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
