@@ -159,6 +159,10 @@ jobs:
 
       - name: Publish to npm
         working-directory: npm-package
-        # npm trusted publishing (OIDC) authenticates automatically via
-        # id-token: write - no NPM_TOKEN secret required
+        # npm trusted publishing (OIDC) is preferred and authenticates via
+        # id-token: write. NODE_AUTH_TOKEN is only a bootstrap fallback for the
+        # very first publish (before a Trusted Publisher can be configured);
+        # remove it once trusted publishing is active.
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: npm publish --access public
