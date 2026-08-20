@@ -1,0 +1,72 @@
+
+@font-face {
+	font-family: 'Zira Mono';
+	font-display: swap;
+	font-weight: 400;
+	font-stretch: normal;
+	font-style: normal;
+	src: url('WOFF2/ZiraMono-Regular.woff2') format('woff2'), url('TTF/ZiraMono-Regular.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Zira Mono';
+	font-display: swap;
+	font-weight: 400;
+	font-stretch: expanded;
+	font-style: normal;
+	src: url('WOFF2/ZiraMono-Extended.woff2') format('woff2'), url('TTF/ZiraMono-Extended.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Zira Mono';
+	font-display: swap;
+	font-weight: 400;
+	font-stretch: normal;
+	font-style: italic;
+	src: url('WOFF2/ZiraMono-Italic.woff2') format('woff2'), url('TTF/ZiraMono-Italic.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Zira Mono';
+	font-display: swap;
+	font-weight: 400;
+	font-stretch: expanded;
+	font-style: italic;
+	src: url('WOFF2/ZiraMono-ExtendedItalic.woff2') format('woff2'), url('TTF/ZiraMono-ExtendedItalic.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Zira Mono';
+	font-display: swap;
+	font-weight: 700;
+	font-stretch: normal;
+	font-style: normal;
+	src: url('WOFF2/ZiraMono-Bold.woff2') format('woff2'), url('TTF/ZiraMono-Bold.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Zira Mono';
+	font-display: swap;
+	font-weight: 700;
+	font-stretch: expanded;
+	font-style: normal;
+	src: url('WOFF2/ZiraMono-ExtendedBold.woff2') format('woff2'), url('TTF/ZiraMono-ExtendedBold.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Zira Mono';
+	font-display: swap;
+	font-weight: 700;
+	font-stretch: normal;
+	font-style: italic;
+	src: url('WOFF2/ZiraMono-BoldItalic.woff2') format('woff2'), url('TTF/ZiraMono-BoldItalic.ttf') format('truetype');
+}
+
+@font-face {
+	font-family: 'Zira Mono';
+	font-display: swap;
+	font-weight: 700;
+	font-stretch: expanded;
+	font-style: italic;
+	src: url('WOFF2/ZiraMono-ExtendedBoldItalic.woff2') format('woff2'), url('TTF/ZiraMono-ExtendedBoldItalic.ttf') format('truetype');
+}
