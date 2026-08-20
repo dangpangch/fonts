@@ -78,6 +78,8 @@ jobs:
           mkdir -p zira/ttf zira/woff2
           cp iosevka/dist/*/TTF/*.ttf zira/ttf/
           cp iosevka/dist/*/WOFF2/*.woff2 zira/woff2/
+          # Ship the SIL OFL 1.1 license alongside the built fonts (OFL condition 2)
+          cp LICENSE.md zira/LICENSE.md
 
       - name: List built fonts
         run: find zira -type f | sort

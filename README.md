@@ -16,3 +16,13 @@
 | `zira/woff2` | WOFF2 网页字体（取自 `dist/*/WOFF2/*.woff2`） |
 
 > 由于自动提交只改动 `zira/`，不会再次触发构建，避免循环。
+
+## License
+
+Zira 系列字体是 [Iosevka](https://github.com/be5invis/Iosevka) 的派生作品
+（Modified Version），与 Iosevka 一样采用 **SIL Open Font License 1.1** 发布。
+
+- 完整许可文本与合规说明见 [`LICENSE.md`](LICENSE.md)（含 Iosevka 原始版权声明与 OFL 1.1 全文）。
+- 每个构建出的字体都在元数据中内嵌了 Iosevka 版权声明与 OFL 许可（OFL 条件 2），
+  同时 workflow 会把 `LICENSE.md` 一并复制到 `zira/` 随字体发布。
+- Iosevka 未声明保留字体名（Reserved Font Name），派生字体改名 “Zira …” 发布符合 OFL 要求。
