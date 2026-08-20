@@ -1,4 +1,4 @@
-name: Release Zira Fonts
+name: Build and Release Zira Font
 
 on:
   push:
@@ -161,7 +161,8 @@ jobs:
         run: |
           cd zira
           zip -r /tmp/zira-ttf.zip */TTF LICENSE.md
-          zip -r /tmp/zira-woff2.zip */WOFF2 *.css LICENSE.md
+          # include the per-family CSS (mono/ZiraMono.css etc.) plus fonts.css
+          zip -r /tmp/zira-woff2.zip */WOFF2 */*.css *.css LICENSE.md
           cd ..
           ls -lh /tmp/zira-*.zip
 
@@ -173,4 +174,5 @@ jobs:
           files: |
             /tmp/zira-ttf.zip
             /tmp/zira-woff2.zip
+          overwrite: true
           generate_release_notes: true
