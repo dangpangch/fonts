@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: write
+  id-token: write  # required for npm trusted publishing (OIDC)
 
 concurrency:
   group: release-zira-fonts
@@ -158,6 +159,6 @@ jobs:
 
       - name: Publish to npm
         working-directory: npm-package
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        # npm trusted publishing (OIDC) authenticates automatically via
+        # id-token: write - no NPM_TOKEN secret required
         run: npm publish --access public
