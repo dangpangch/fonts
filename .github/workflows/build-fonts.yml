@@ -22,12 +22,18 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  release:
-    name: Build and release
+  check:
+    name: Check build plan changes
     runs-on: ubuntu-latest
+    outputs:
+      changed: ${{ steps.check.outputs.changed }}
+      tag: ${{ steps.version.outputs.tag }}
+      npm: ${{ steps.version.outputs.npm }}
     steps:
-      - name: Checkout
+      - name: Checkout (full history for tags)
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Resolve version
         id: version
@@ -47,6 +53,39 @@ jobs:
           fi
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
           echo "npm=$NPM" >> "$GITHUB_OUTPUT"
+
+      - name: Check private-build-plans.toml changes since last release
+        id: check
+        run: |
+          # Manual dispatch is an explicit "build now" action: always build.
+          if [ "${{ github.event_name }}" == "workflow_dispatch" ]; then
+            echo "::notice::Manual dispatch: building regardless of plan changes."
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          TAG="${{ steps.version.outputs.tag }}"
+          PREV_TAG=$(git tag --sort=-version:refname | awk -v cur="$TAG" '$0 != cur' | head -1)
+          if [ -z "$PREV_TAG" ]; then
+            echo "No previous release tag found; building."
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if git diff --quiet "$PREV_TAG"..HEAD -- private-build-plans.toml; then
+            echo "::notice::private-build-plans.toml unchanged since $PREV_TAG; skipping build."
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "::notice::private-build-plans.toml changed since $PREV_TAG; building."
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+  release:
+    name: Build and release
+    needs: check
+    if: needs.check.outputs.changed == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
 
       - name: Clone Iosevka source
         run: |
@@ -129,10 +168,9 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: ${{ steps.version.outputs.tag }}
-          name: ${{ steps.version.outputs.tag }}
+          tag_name: ${{ needs.check.outputs.tag }}
+          name: ${{ needs.check.outputs.tag }}
           files: |
             /tmp/zira-ttf.zip
             /tmp/zira-woff2.zip
           generate_release_notes: true
-

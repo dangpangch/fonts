@@ -6,8 +6,8 @@
 
 推送到 `v*` tag（如 `./release.sh 0.1.0`）或手动触发后，两个 workflow 依次自动执行：
 
-1. **Release Zira Fonts**（`build-fonts.yml`）：克隆 Iosevka 源码（默认 `v34.8.0`，可指定 `iosevka_ref`）→ 按 `private-build-plans.toml` 中所有 `[buildPlans.*]` 构建（TTF + WOFF2）→ 上传 GitHub Release 资产（`zira-ttf.zip`、`zira-woff2.zip`，桌面下载用）；
-2. **Publish to npm**（`publish-npm.yml`）：Release 成功后自动触发 → 下载 `zira-woff2.zip` → 发布 npm 包 `@dangpang/zira-fonts`（Web 用，含 WOFF2 + CSS）。
+1. **Release Zira Fonts**（`build-fonts.yml`）：先检查 `private-build-plans.toml` 自上个发布 tag 以来是否修改——**未修改则跳过构建**；有修改才克隆 Iosevka 源码（默认 `v34.8.0`，可指定 `iosevka_ref`）→ 按 `private-build-plans.toml` 中所有 `[buildPlans.*]` 构建（TTF + WOFF2）→ 上传 GitHub Release 资产（`zira-ttf.zip`、`zira-woff2.zip`，桌面下载用）；
+2. **Publish to npm**（`publish-npm.yml`）：Release 成功后自动触发，**先确认带版本号的 Release 真实存在**（构建被跳过则不发）→ 下载 `zira-woff2.zip` → 发布 npm 包 `@dangpang/zira-fonts`（Web 用，含 WOFF2 + CSS）。
 
 构建产物不提交进仓库。
 
