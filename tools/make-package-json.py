@@ -11,6 +11,7 @@ served by the jsDelivr npm CDN:
 """
 
 import json
+import re
 import sys
 from pathlib import Path
 
@@ -19,7 +20,12 @@ def main():
     if len(sys.argv) != 3:
         print(f"Usage: {Path(sys.argv[0]).name} <version> <output_dir>", file=sys.stderr)
         return 1
-    version, out_dir = sys.argv[1], Path(sys.argv[2])
+    version = sys.argv[1].strip()
+    if not re.fullmatch(r"\d+\.\d+\.\d+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?", version):
+        print(f"ERROR: invalid npm version '{version}' (expected semver, e.g. 0.1.0)",
+              file=sys.stderr)
+        return 1
+    out_dir = Path(sys.argv[2])
     pkg = {
         "name": "@dangpang/zira-fonts",
         "version": version,
