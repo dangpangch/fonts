@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate package.json for the @dangpangch/zira-fonts npm package.
+"""Generate package.json for the @dangpang/zira-fonts npm package.
 
 Usage:
     python3 tools/make-package-json.py <version> <output_dir>
@@ -7,7 +7,7 @@ Usage:
 The package ships the web build (WOFF2 + CSS, under `zira/`) so it can be
 served by the jsDelivr npm CDN:
 
-    https://cdn.jsdelivr.net/npm/@dangpangch/zira-fonts@latest/zira/fonts.css
+    https://cdn.jsdelivr.net/npm/@dangpang/zira-fonts@latest/zira/fonts.css
 """
 
 import json
@@ -21,7 +21,7 @@ def main():
         return 1
     version, out_dir = sys.argv[1], Path(sys.argv[2])
     pkg = {
-        "name": "@dangpangch/zira-fonts",
+        "name": "@dangpang/zira-fonts",
         "version": version,
         "description": (
             "Zira Mono, Zira Sans and Zira Serif - custom fonts built from Iosevka "

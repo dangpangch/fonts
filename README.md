@@ -9,7 +9,7 @@
 1. 克隆 Iosevka 源码（默认 `v34.8.0`，可指定 `iosevka_ref`）；
 2. 按 `private-build-plans.toml` 中所有 `[buildPlans.*]` 构建（TTF + WOFF2）；
 3. 上传 GitHub Release 资产（`zira-ttf.zip`、`zira-woff2.zip`，桌面下载用）；
-4. 发布 npm 包 `@dangpangch/zira-fonts`（Web 用，含 WOFF2 + CSS）。
+4. 发布 npm 包 `@dangpang/zira-fonts`（Web 用，含 WOFF2 + CSS）。
 
 构建产物不提交进仓库。
 
@@ -18,7 +18,7 @@
 ```html
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@dangpangch/zira-fonts@latest/zira/fonts.css"
+  href="https://cdn.jsdelivr.net/npm/@dangpang/zira-fonts@latest/zira/fonts.css"
 />
 ```
 
@@ -31,7 +31,7 @@ font-family: "Zira Mono"; /* 或 Zira Sans / Zira Serif */
 ```html
 <link
   rel="stylesheet"
-  href="https://cdn.jsdelivr.net/npm/@dangpangch/zira-fonts@0.1.0/zira/fonts.css"
+  href="https://cdn.jsdelivr.net/npm/@dangpang/zira-fonts@0.1.0/zira/fonts.css"
 />
 ```
 
